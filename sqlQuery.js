@@ -17,4 +17,36 @@ class sqlQuery {
 			database: this.database
 		}, console.log('Database connected success.'));
 	}
+
+	viewAllDepartments(){
+
+	}
+
+	viewAllRoles(){
+
+	}
+
+	viewAllEmployees(){
+
+	}
+
+	addDepartment(){
+
+	}
+
+	addRole(){
+		
+	}
+
+	addEmployee(){
+
+	}
+
+	updateEmployeeRole(){
+		
+	}
 }
+
+
+
+module.exports = sqlQuery
