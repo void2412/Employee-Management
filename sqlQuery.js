@@ -28,7 +28,13 @@ class sqlQuery {
 	}
 
 	async getAllRoles(){
-		let data = await this.connection.promise().query(`select id, title as name from role`)
+		let data = await this.connection.promise().query(`
+		select r.id, title, department.name as department, salary 
+		from role r
+		left join department on r.department_id = department.id
+		order by department.name
+		`
+		)
 		return data[0]
 	}
 
@@ -42,20 +48,20 @@ class sqlQuery {
 	}
 
 	addDepartment(name){
-		this.connection.query(`INSERT INTO department(name) VALUES (?)`, name, (err, result)=>{
-			err ? console.error(err) : console.log(result)
+		this.connection.query(`INSERT INTO department(name) VALUES (?);`, name, (err, result)=>{
+			err ? console.error(err) : true
 		})
 	}
 
 	addRole(name, salary, departmentId){
-		this.connection.query(`INSERT INTO role(title, salary, department_id) VALUES (?,?,?);`,[name, salary, departmentId], (err, result)=>{
-			err ? console.error(err) : console.log(result)
+		this.connection.query(`INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?);`,[name, salary, departmentId], (err, result)=>{
+			err ? console.error(err) : true
 		})
 	}
 
 	addEmployee(firstName, lastName, roleId, managerId){
 		this.connection.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);`,[firstName, lastName, roleId, managerId], (err, result)=>{
-			err ? console.error(err) : console.log(result)
+			err ? console.error(err) : true
 		})
 	}
 
@@ -63,7 +69,7 @@ class sqlQuery {
 		this.connection.query(`UPDATE employee 
 		SET role_id = ?
 		WHERE id = ?`, [roleId, employeeId], (err, result)=>{
-			err ? console.error(err) : console.log(result)
+			err ? console.error(err) : console.log(``)
 		})
 	}
 
@@ -71,6 +77,5 @@ class sqlQuery {
 		this.connection.end()
 	}
 }
-
 
 module.exports = sqlQuery

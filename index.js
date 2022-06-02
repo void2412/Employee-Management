@@ -53,11 +53,40 @@ async function viewAllEmployees(){
 }
 
 async function addDepartment(){
-	
+	let department = await inquirer.prompt({
+		type:'input',
+		message: 'Enter New Department Name: ',
+		name: 'name'
+	})
+
+	await sql.addDepartment(department.name)
+	console.log(`Successfully added department ${department.name}`)
 }
 
 async function addRole(){
+	let department = await sql.getAllDepartments()
+	let role = await inquirer.prompt([
+		{
+			type: 'input',
+			name:'title',
+			message: 'Enter New Role Name: '
+		},
+		{
+			type: 'number',
+			name:'salary',
+			message: 'Enter New Salary: '
+		},
+		{
+			type: 'list',
+			name:'department',
+			message: 'Choose a Department',
+			choices: department.map(object => object.name)
+		}
+	])
 
+	let departmentChoosen = department.filter(object => object.name == role.department)
+	await sql.addRole(role.title, role.salary, departmentChoosen[0].id)
+	console.log(`Successfully added role ${role.title}`)
 }
 
 async function addEmployee(){
