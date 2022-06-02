@@ -29,7 +29,7 @@ class sqlQuery {
 
 	async getAllRoles(){
 		let data = await this.connection.promise().query(`
-		select r.id, title, department.name as department, salary 
+		select r.id as id, title as name, department.name as department, salary 
 		from role r
 		left join department on r.department_id = department.id
 		order by department.name
@@ -40,10 +40,15 @@ class sqlQuery {
 
 	async getAllEmployees(){
 		let data = await this.connection.promise().query(`select t1.id, t1.first_name, t1.last_name, role.title, department.name, concat(t2.first_name,' ', t2.last_name) as manager from employee t1
-		join role on t1.role_id = role.id
-		join department on role.department_id = department.id
+		left join role on t1.role_id = role.id
+		left join department on role.department_id = department.id
 		left join employee t2 on t1.manager_id = t2.id
 		order by t1.id`)
+		return data[0]
+	}
+
+	async customQuery(queryString){
+		let data = await this.connection.promise().query(queryString)
 		return data[0]
 	}
 

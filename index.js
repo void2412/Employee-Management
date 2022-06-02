@@ -60,11 +60,13 @@ async function addDepartment(){
 	})
 
 	await sql.addDepartment(department.name)
-	console.log(`Successfully added department ${department.name}`)
+	console.log(`Added department ${department.name}`)
 }
 
 async function addRole(){
 	let department = await sql.getAllDepartments()
+	department.forEach(object => delete Object.assign(object, {['value']: object['id'] })['id'])
+	department.unshift({value:null, name:'None'})
 	let role = await inquirer.prompt([
 		{
 			type: 'input',
@@ -80,19 +82,67 @@ async function addRole(){
 			type: 'list',
 			name:'department',
 			message: 'Choose a Department',
-			choices: department.map(object => object.name)
+			choices: department
 		}
 	])
 
-	let departmentChoosen = department.filter(object => object.name == role.department)
-	await sql.addRole(role.title, role.salary, departmentChoosen[0].id)
-	console.log(`Successfully added role ${role.title}`)
+	await sql.addRole(role.title, role.salary, role.department)
+	console.log(`Added role ${role.title}`)
 }
 
 async function addEmployee(){
+	let employeeList = await sql.customQuery(`select id as value, concat(first_name, ' ', last_name) as name from employee order by id`)
+	employeeList.unshift({value:null, name:"None"})
+	let roleList = await sql.customQuery(`select id as value, title as name from role order by id`)
+	roleList.unshift({value:null, name:'None'})
+	let employee = await inquirer.prompt([
+		{
+			type: 'input',
+			name:'firstName',
+			message: 'Enter New Employee First Name: '
+		},
+		{
+			type: 'input',
+			name:'lastName',
+			message: 'Enter New Employee Last Name: '
+		},
+		{
+			type: 'list',
+			name:'role',
+			message: 'Choose a role',
+			choices: roleList
+		},
+		{
+			type: 'list',
+			name:'manager',
+			message: 'Choose a manager',
+			choices: employeeList
+		}
+	])
 
+	await sql.addEmployee(employee.firstName, employee.lastName, employee.role, employee.manager)
+	console.log(`Added ${employee.firstName} ${employee.lastName}`)
 }
 
 async function updateRole(){
+	let employeeList = await sql.customQuery(`select id as value, concat(first_name, ' ', last_name) as name from employee order by id`)
+	let roleList = await sql.customQuery(`select id as value, title as name from role order by id`)
 
+	let employee = await inquirer.prompt([
+		{
+			type: 'list',
+			message: 'Choose employee to update role',
+			name: 'employee',
+			choices: employeeList
+		},
+		{
+			type: 'list',
+			message: 'Choose a role to update',
+			name: 'role',
+			choices: roleList
+		}
+	])
+
+	await sql.updateEmployeeRole(employee.employee, employee.role)
+	console.log(`Role updated`)
 }
