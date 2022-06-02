@@ -35,20 +35,21 @@ async function mainMenu(){
 			case menuList[6]: await updateRole(); break;
 			case menuList[7]: sql.close(); return;
 		}
+
 	}
 	
 }
 mainMenu()
 async function viewAllDepartments(){
-	console.table(sql.getAllDepartments())
+	console.table(await sql.getAllDepartments())
 }
 
 async function viewAllRoles(){
-	console.table(sql.getAllRoles())
+	console.table(await sql.getAllRoles())
 }
 
 async function viewAllEmployees(){
-	console.table(sql.getAllEmployees())
+	console.table(await sql.getAllEmployees())
 }
 
 async function addDepartment(){
