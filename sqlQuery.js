@@ -7,6 +7,9 @@ class sqlQuery {
 		this.user = process.env.user
 		this.password = process.env.password
 		this.database = process.env.database
+		this.returnedDepartements=[]
+		this.returnedRoles=[]
+		this.returnedEmployees=[]
 		this.connection
 	}
 
@@ -19,35 +22,38 @@ class sqlQuery {
 		}, console.log('Database connected success.'));
 	}
 
-	viewAllDepartments(){
-		this.connection.query(`select * from department`, (err, result) => err ? console.log(err): console.table(result))
+	async getAllDepartments(){
+		let data = await this.connection.promise().query(`select * from department`)
+		return data[0]
 	}
 
-	viewAllRoles(){
-		this.connection.query(`select id, title as name from role`, (err, result) => err ? console.log(err): console.table(result))
+	async getAllRoles(){
+		let data = await this.connection.promise().query(`select id, title as name from role`)
+		return data[0]
 	}
 
-	viewAllEmployees(){
-		this.connection.query(`select t1.id, t1.first_name, t1.last_name, role.title, department.name, concat(t2.first_name,' ', t2.last_name) as manager from employee t1
+	async getAllEmployees(){
+		let data = await this.connection.promise().query(`select t1.id, t1.first_name, t1.last_name, role.title, department.name, concat(t2.first_name,' ', t2.last_name) as manager from employee t1
 		join role on t1.role_id = role.id
 		join department on role.department_id = department.id
 		left join employee t2 on t1.manager_id = t2.id
-		order by t1.id`, (err, result) => err ? console.log(err): console.table(result))
+		order by t1.id`)
+		return data[0]
 	}
 
-	addDepartment(){
+	addDepartment(name){
 
 	}
 
-	addRole(){
+	addRole(name, salary, departmentId){
 		
 	}
 
-	addEmployee(){
+	addEmployee(firstName, lastName, roleId, managerId){
 
 	}
 
-	updateEmployeeRole(){
+	updateEmployeeRole(employeeId, roleId){
 		
 	}
 }
