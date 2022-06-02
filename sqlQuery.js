@@ -42,15 +42,21 @@ class sqlQuery {
 	}
 
 	addDepartment(name){
-
+		this.connection.query(`INSERT INTO department(name) VALUES (?)`, name, (err, result)=>{
+			err ? console.error(err) : console.log(result)
+		})
 	}
 
 	addRole(name, salary, departmentId){
-		
+		this.connection.query(`INSERT INTO role(title, salary, department_id) VALUES (?,?,?)`,[name, salary, departmentId], (err, result)=>{
+			err ? console.error(err) : console.log(result)
+		})
 	}
 
 	addEmployee(firstName, lastName, roleId, managerId){
-
+		this.connection.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`,[firstName, lastName, roleId, managerId], (err, result)=>{
+			err ? console.error(err) : console.log(result)
+		})
 	}
 
 	updateEmployeeRole(employeeId, roleId){
