@@ -74,7 +74,7 @@ class sqlQuery {
 		this.connection.query(`UPDATE employee 
 		SET role_id = ?
 		WHERE id = ?`, [roleId, employeeId], (err, result)=>{
-			err ? console.error(err) : console.log(``)
+			err ? console.error(err) : true
 		})
 	}
 
