@@ -66,6 +66,10 @@ class sqlQuery {
 			err ? console.error(err) : console.log(result)
 		})
 	}
+
+	close(){
+		this.connection.end()
+	}
 }
 
 

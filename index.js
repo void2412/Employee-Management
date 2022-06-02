@@ -13,7 +13,10 @@ const menuList = [
 	'Quit'
 	]
 
+const sql = new sqlQuery()
+
 async function mainMenu(){
+	sql.connect()
 	while(true){
 		var userChoice = await inquirer.prompt({
 			type:'list',
@@ -30,26 +33,26 @@ async function mainMenu(){
 			case menuList[4]: await addRole(); break;
 			case menuList[5]: await addEmployee(); break;
 			case menuList[6]: await updateRole(); break;
-			case menuList[7]: return;
+			case menuList[7]: sql.close(); return;
 		}
 	}
 	
 }
 mainMenu()
 async function viewAllDepartments(){
-
+	console.table(sql.getAllDepartments())
 }
 
 async function viewAllRoles(){
-
+	console.table(sql.getAllRoles())
 }
 
 async function viewAllEmployees(){
-
+	console.table(sql.getAllEmployees())
 }
 
 async function addDepartment(){
-
+	
 }
 
 async function addRole(){
